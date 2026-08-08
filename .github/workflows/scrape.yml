@@ -1,0 +1,34 @@
+name: Scheduled scrape (books + quotes)
+
+# Runs daily at 06:00 UTC + on manual trigger. This is the "GitHub workflow
+# in which your web-scraping script is automatically executed" the brief asks for.
+# It runs BOTH pipelines the assignment requires: the demo site and your own site.
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Scrape demo bookstore
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: python scraper_books.py
+
+      - name: Scrape quotes (own site)
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: python scraper_quotes.py
