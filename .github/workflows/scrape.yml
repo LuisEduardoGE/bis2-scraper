@@ -1,8 +1,7 @@
 name: Scheduled scrape (books + quotes)
 
-# Runs daily at 06:00 UTC + on manual trigger. This is the "GitHub workflow
-# in which your web-scraping script is automatically executed" the brief asks for.
-# It runs BOTH pipelines the assignment requires: the demo site and your own site.
+# Runs both scrapers daily at 06:00 UTC and on manual trigger.
+# Needs SUPABASE_URL and SUPABASE_KEY as repository secrets.
 on:
   schedule:
     - cron: "0 6 * * *"
@@ -27,7 +26,7 @@ jobs:
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         run: python scraper_books.py
 
-      - name: Scrape quotes (own site)
+      - name: Scrape quotes
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}

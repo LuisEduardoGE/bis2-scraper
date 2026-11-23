@@ -21,6 +21,7 @@ toscrape site ──requests──▶ BeautifulSoup parse ──▶ rows ──u
 ```
 
 - Follows pagination until the last page; polite timeouts and an explicit User-Agent.
+- **Scheduled**: a GitHub Actions cron keeps the tables fresh daily.
 - **Idempotent**: upserts on a natural key (`detail_url` for books, a hash of author + text for quotes), so re-running never duplicates rows.
 - Tags are stored as a Postgres `text[]` array; indexes on rating, price and author support dashboard queries.
 
@@ -35,7 +36,7 @@ source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-Create a `.env` file (never commit it):
+Copy `.env.example` to `.env` (git-ignored) and fill in:
 
 ```
 SUPABASE_URL=https://<project>.supabase.co
@@ -48,6 +49,10 @@ SUPABASE_KEY=<service-role key>
 python scraper_books.py
 python scraper_quotes.py
 ```
+
+## Scheduled runs
+
+[`.github/workflows/scrape.yml`](.github/workflows/scrape.yml) runs both scrapers every day at 06:00 UTC on GitHub Actions, and on demand via *Run workflow*. Add `SUPABASE_URL` and `SUPABASE_KEY` as repository secrets (Settings → Secrets and variables → Actions).
 
 ## License
 
