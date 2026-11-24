@@ -6,22 +6,27 @@ is the standard, scrape-safe companion to books.toscrape.com. Scrapes every quot
 (text, author, tags) across all pages and upserts into a Supabase table.
 
     pip install -r requirements.txt          # same deps as the books scraper
-    # run schema_quotes.sql in Supabase first
+    # run schema.sql in Supabase first
     # env: SUPABASE_URL, SUPABASE_KEY
     python scraper_quotes.py
 
 Business question this feeds: "Which authors and themes (tags) dominate the collection?"
 """
 from __future__ import annotations
+
+import hashlib
 import os
 import time
-import hashlib
+from urllib.parse import urljoin
+
 import requests
 from bs4 import BeautifulSoup
-from urllib.parse import urljoin
 from supabase import create_client
+
 try:
-    from dotenv import load_dotenv; load_dotenv()
+    from dotenv import load_dotenv
+
+    load_dotenv()
 except ImportError:
     pass
 

@@ -2,8 +2,8 @@
 Business IT Solutions 2 — demo scraper: books.toscrape.com -> Supabase
 
 The workshop's "demo bookstore" is the standard practice site books.toscrape.com
-(safe to scrape). This scrapes every book (title, price, rating, availability,
-category) across all pages and upserts them into a Supabase (Postgres) table.
+(safe to scrape). This scrapes every book (title, price, rating, availability and
+detail URL) across all pages and upserts them into a Supabase (Postgres) table.
 
 Setup:
     pip install -r requirements.txt
@@ -14,15 +14,20 @@ Run:
     python scraper_books.py
 """
 from __future__ import annotations
+
 import os
 import re
 import time
+from urllib.parse import urljoin
+
 import requests
 from bs4 import BeautifulSoup
-from urllib.parse import urljoin
 from supabase import create_client
+
 try:
-    from dotenv import load_dotenv; load_dotenv()   # reads .env if present
+    from dotenv import load_dotenv
+
+    load_dotenv()  # reads .env if present
 except ImportError:
     pass
 
